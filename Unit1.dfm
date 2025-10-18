@@ -30,21 +30,6 @@ object Form1: TForm1
     Align = alTop
     Caption = 'Panel1'
     TabOrder = 0
-    object PlusButton: TSpeedButton
-      Left = 688
-      Top = 1
-      Width = 30
-      Height = 30
-      GroupIndex = 1
-      Caption = '+'
-      Flat = True
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -19
-      Font.Name = 'MS Sans Serif'
-      Font.Style = []
-      ParentFont = False
-    end
     object MinusButton: TSpeedButton
       Left = 728
       Top = 1
@@ -52,6 +37,21 @@ object Form1: TForm1
       Height = 30
       GroupIndex = 1
       Caption = '-'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object PlusButton: TSpeedButton
+      Left = 696
+      Top = 1
+      Width = 30
+      Height = 30
+      GroupIndex = 1
+      Down = True
+      Caption = '+'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -19

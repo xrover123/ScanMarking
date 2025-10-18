@@ -16,7 +16,6 @@ type
     DBGrid1: TDBGrid;
     MT: TRxMemoryData;
     DataSource1: TDataSource;
-    PlusButton: TSpeedButton;
     MinusButton: TSpeedButton;
     OKButton: TButton;
     Panel2: TPanel;
@@ -26,6 +25,7 @@ type
     NOTE: TLabel;
     AddButton: TButton;
     Timer1: TTimer;
+    PlusButton: TSpeedButton;
     procedure CheckAction;
     procedure RunAction(Act: byte);
     procedure FormResize(Sender: TObject);
@@ -70,20 +70,11 @@ while not MT.Eof do
 result:=-1;
 end;
 
-
-procedure TForm1.FormResize(Sender: TObject);
-begin
-KIZ.Width:=Width-150;
-PlusButton.Left:=KIZ.Width+3;
-MinusButton.Left:=PlusButton.Left+PlusButton.Width;
-OKButton.Left:=MinusButton.Left+MinusButton.Width+3;
-end;
-
 procedure TForm1.CheckAction;
 var i, j:integer;
-    b: boolean;
+    bLST, bERR: boolean;
 begin
-b:=false;
+bLST:=false;
 try
   BusySign:=True;
   with CheckMark do
@@ -94,7 +85,7 @@ try
         KIZList.CHECK(RS.A[i].index,RS.A[i].KIZ_IndAttr);
       dec(CNT_CHECK,RS.CNT);
       RS.CNT:=0;
-      b:=true;
+      bLST:=true;
       end;
     end;
   except
@@ -115,8 +106,9 @@ if CNT_CHECK=0 then
         else
         Color:=clBlue;
 BusySign:=False;
+bERR:=False;
 try
- if b then
+ if bLST then
    for i:=0 to KIZList.Count-1 do
      with KIZList.KIZ[i] do
        if KIZ_NEW then
@@ -126,14 +118,18 @@ try
            if KIZ_status = 1 then
              MT.FieldByName('STATUS').AsString:='Удачно'
              else
+             begin
              MT.FieldByName('STATUS').AsString:='Ошибка';
+             bERR := True;
+             end;
            MT.FieldByName('IndAttr').Value:=KIZ_IndAttr;
            MT.Post;
            end;
   except
     on E: Exception do
       ShowMessage('Ошибка CheckAction при простановке статуса строки.'+chr(10)+E.Message);
-  end
+  end;
+AddButton.Enabled:=not bERR;
 end;
 procedure TForm1.RunAction(Act: byte);
 begin
@@ -162,6 +158,7 @@ if ind<0 then
   end
   else
   begin
+  AddButton.Enabled:=False;
   MT.First;
   while not MT.Eof do
     begin
@@ -196,6 +193,15 @@ end;
 procedure TForm1.Timer1Timer(Sender: TObject);
 begin
 ActPrc ;
+end;
+
+
+procedure TForm1.FormResize(Sender: TObject);
+begin
+KIZ.Width:=Width-150;
+PlusButton.Left:=KIZ.Width+6;
+MinusButton.Left:=PlusButton.Left+PlusButton.Width;
+OKButton.Left:=MinusButton.Left+MinusButton.Width+3;
 end;
 
 procedure TForm1.FormShow(Sender: TObject);
